@@ -47,6 +47,7 @@ class Processor:
 
             except KeyboardInterrupt:
                 self.__listener.stop()
+                print()
 
     def __detect_eip_password(self):
         text = ''.join(self.__buffer)
