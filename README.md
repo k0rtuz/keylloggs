@@ -32,3 +32,17 @@ en el archivo de texto *requirements.txt*.
 A continuación, ejecuta el script de Python *main.py*, que también tiene permisos de ejecución y llama
 al intérprete del entorno virtual mediante la primera línea (*shebang* **#!/usr/bin/env python**);
 ejecutándose toda la lógica programada.
+
+### Limitaciones
+Al elegir la opción de registrar pulsaciones de teclado, es posible escribir directamente sobre la
+terminal que tiene el foco de este programa, no obstante, no es el uso para el que está pensado y todos
+los caracteres que se introduzcan aparecerán doblemente.
+
+La idea de este programa es tras seleccionar esa opción, dejar la terminal a la escucha y probar con
+otro programa como puede ser un editor de texto, cliente de correo, etc. Al escribir en ese otro programa,
+se verán correctamente los caracteres en la terminal del keylogger.
+
+Adicionalmente, debido a los modos de lectura y escritura de ficheros en Python, en la versión actual se ha
+optado por almacenar todo sin permitir el borrado de caracteres, mostrándose en los archivos los códigos
+correspondientes a la tecla Backspace. Sin embargo, este borrado funciona perfectamente
+en la salida por consola, tanto para la captura en tiempo real como al visualizar los ficheros escritos.
