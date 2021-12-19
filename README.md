@@ -33,6 +33,9 @@ A continuación, ejecuta el script de Python *main.py*, que también tiene permi
 al intérprete del entorno virtual mediante la primera línea (*shebang* **#!/usr/bin/env python**);
 ejecutándose toda la lógica programada.
 
+Si se selecciona la opción de registrar pulsaciones, el programa se queda en la terminal
+a la escucha de eventos de teclado, pudiendo interrumpirse mediante el atajo Ctrl+C.
+
 ### Limitaciones
 Al elegir la opción de registrar pulsaciones de teclado, es posible escribir directamente sobre la
 terminal que tiene el foco de este programa, no obstante, no es el uso para el que está pensado y todos
