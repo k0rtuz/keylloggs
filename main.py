@@ -2,7 +2,7 @@
 import enum
 import pathlib
 
-from processor import Processor
+from core import Processor
 
 
 class Option(enum.Enum):
