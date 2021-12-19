@@ -95,6 +95,9 @@ class Processor:
 
     def __press_callback(self):
         def on_press(key):
+            if len(self.__buffer) > self.__buffer_limit:
+                self.__buffer.clear()
+
             current_key = None
             if key in (kb.Key.alt_gr, kb.Key.alt_r, kb.Key.ctrl, kb.Key.ctrl_l, kb.Key.ctrl_r):
                 self.__previous_key = key
